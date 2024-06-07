@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple chatroom</title>
+</head>
+
+<body>
+    <h1>Chatroom</h1>
+    <button id="startButton">Start Game</button>
+    <form id ="messageForm">
+        <input type="text" id="messageInput" placeorder="Type your message here..." required>
+        <button id="sendMessageBtn" type="submit">Send</button>
+    </form>
+    <div id="sceneImage" style="text-align:center; margin-top:20px;">
+        <!-- 圖片將在這裡顯示 -->
+    </div>
+
+</body>
+
+<script>
+    var conversationHistory = [];
+
+    var apiKey = prompt("Please enter your API key:", "");
+
+    if (!apiKey) {
+        alert("API key and name are required to use the chatroom.");
+        // Optionally, redirect or disable form
+    } else {
+        document.getElementById('startButton').addEventListener('click', function () {
+            conversationHistory.push({
+                "role": 'user',
+                "parts":[{
+                    "text": `腳本：
+                        """
+                        遊戲標題：勇敢逐夢
+                        場景 1
+                        場景
+                        艾琳正在她的房間練習唱歌，母親進來。
+
+                        母親：艾琳，你怎麼又在唱歌？你該準備面試了。
+
+                        選擇
+                        艾琳：媽媽，我真的很想成為歌手，這是我的夢想。
+                        艾琳：我知道了，我會準備面試的。
+                        請選擇（1 或 2）：
+
+                        場景 2
+                        如果你選擇了 1：
+                        場景
+                        艾琳堅持自己的夢想，母親對此表示擔憂。
+
+                        母親：歌手？你知道這有多難嗎？我不想看你失敗。
+
+                        艾琳決定去找她的朋友傑克談談。艾琳和傑克在咖啡店聊天。
+
+                        傑克：你真的不應該放棄你的夢想，艾琳。我認識一個製作人，也許可以幫你。
+
+                        選擇
+                        艾琳：真的嗎？那太好了，我願意試試看！
+                        艾琳：我不確定，傑克。也許我該聽媽媽的話。
+                        請選擇（1 或 2）：
+
+                        如果你選擇了 2：
+                        場景
+                        艾琳決定聽從母親的建議，專心準備面試。
+
+                        母親：這就對了，現實一點，這對你更好。
+
+                        艾琳內心對音樂夢想有所猶豫，但還是專注於準備面試。然而，她的朋友傑克來訪，兩人在咖啡店聊天。
+
+                        傑克：你真的不應該放棄你的夢想，艾琳。我認識一個製作人，也許可以幫你。
+
+                        選擇
+                        艾琳：真的嗎？那太好了，我願意試試看！
+                        艾琳：我不確定，傑克。也許我該聽媽媽的話。
+                        請選擇（1 或 2）：
+
+                        場景 3
+                        如果你選擇了 1：
+                        場景
+                        傑克安排了一次試鏡，艾琳來到了音樂製作人的辦公室。
+
+                        製作人：別緊張，放鬆點，盡情展現你的才華吧。
+
+                        選擇
+                        艾琳：好的，我會的。（開始唱歌）
+                        艾琳：我怕自己不夠好。
+                        請選擇（1 或 2）：
+
+                        如果你選擇了 2：
+                        場景
+                        艾琳最終決定不參加試鏡，專心準備面試，並選擇了一份穩定的工作。她過上了安穩的生活，但內心總是懷念未能實現的夢想。
+
+                        結局
+                        艾琳雖然過上了穩定的生活，但內心總是懷念未能實現的音樂夢想。
+
+                        場景 4（如果你在場景 3 中選擇了 1）
+                        如果你選擇了 1：
+                        場景
+                        艾琳的表現非常好，製作人給予肯定。
+
+                        製作人：你很有潛力，願意和我們簽約嗎？
+
+                        結局
+                        艾琳決定簽約，開始她的音樂事業，最終成為一名知名歌手。她的母親也開始支持她的選擇，家庭和睦。
+
+                        如果你選擇了 2：
+                        場景
+                        製作人：每個人都會有這種感覺，但你要相信自己。
+
+                        艾琳深呼吸，決定勇敢嘗試。結果她的表現非常好，製作人給予肯定。
+
+                        製作人：你很有潛力，願意和我們簽約嗎？
+
+                        結局
+                        艾琳決定簽約，開始她的音樂事業，最終成為一名知名歌手。她的母親也開始支持她的選擇，家庭和睦。
+                        `
+                }]
+            })
+            fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCaNn9ILR6Wve2H8e4NjfDYD9hjPP0_rbc', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                }, 
+                body: JSON.stringify({
+                    "contents": conversationHistory,
+                    "safetySettings":[
+                        {
+                            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                            "threshold": "BLOCK_NONE"
+                        },
+                        {
+                            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                            "threshold": "BLOCK_NONE"
+                        },
+                    ],
+                    "generationConfig": {
+                        "stopSequences": [
+                            ""
+                        ],
+                        "temperature": 2.0, 
+                        "maxOutputTokens": 2048,
+                        "topP": 0.8, 
+                        "topK": 10
+                    }
+                })
+            })     
+                .then(response => response.json())
+                .then(data => {
+                    console.log(conversationHistory)
+                    var responseText = data.candidates[0].content.parts[0].text;
+                    addToConversationHistory('model', responseText);
+                    displayMessage(responseText, 'bot');
+                    inputElement.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                    inputElement.disabled = false;
+                });
+
+            document.getElementById('messageInput').value = '';
+        });
+    }
+
+    function addToConversationHistory(role, text){
+        conversationHistory.push({
+            "role": role, 
+            "parts": [{"text": text}]
+        });
+    }
+
+    function displayMessage(message, sender){
+        var messageElement = document.createElement('div');
+        var formatMessage = formatText(message);
+        messageElement.innerHTML = formatMessage;
+        messageElement.classList.add('message');
+        if (sender === 'user') {
+            messageElement.classList.add('userMessage');
+        } else {
+            messageElement.classList.add('botMessage');
+        }
+        document.getElementById('messages').appendChild(messageElement);
+        // Scroll to bottom
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        updateSceneImage(message);
+    }
+
+    function formatText(text) {
+        let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<br><strong>$1</strong>');
+        formattedText = formattedText.replace(/\*(.*?)\s/g, '<br>$1');
+        return formattedText;
+    }
+
+    function updateSceneImage(responseText){
+        let sceneMatch = responseText.match(/場景：(.*?)\s/); // 使用正則表達式匹配場景描述
+        if (sceneMatch && sceneMatch[1]){
+            let scene = sceneMatch[1];
+            console.log(scene);
+            //檢查scene是否包含"房間"
+            if (scene.includes("房間")) {
+                document.getElementById('sceneImage').innerHTML = '<img src="https://tengrai-generated.s3-accelerate.amazonaws.com/google-oauth2%7C104212242817498863208/a02f6455-aea6-4f5f-8310-8cdf2dd5e17e/tengrai_image_1716203818_536567.png">'
+            } else if(scene.includes("咖啡店")){
+                document.getElementById('sceneImage').innerHTML = '<img src="https://tengrai-generated.s3-accelerate.amazonaws.com/google-oauth2%7C104212242817498863208/7a51946c-c562-4b6e-961c-41756a7edde5/tengrai_image_1716204611_565377.png">'
+            } else if(scene.includes("音樂製作人的辦公室")){
+                document.getElementById('sceneImage').innerHTML = '<img src="https://tengrai-generated.s3-accelerate.amazonaws.com/google-oauth2%7C104212242817498863208/4b13726a-0755-4ba3-abd0-a7c99ead39b8/tengrai_image_1716204732_209696.png">'
+            }
+            else {
+                // 如果不包含"房間"，可以在這裡處理其他情況或者不進行任何操作
+                // 例如清空圖片或顯示預設圖片
+                document.getElementById('sceneImage').innerHTML = ''; // 清空圖片
+            }
+        }
+    }
+</script>
+
+</html>
